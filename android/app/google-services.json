@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1013300933467",
+    "project_id": "codebridge-c0679",
+    "storage_bucket": "codebridge-c0679.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1013300933467:android:0f192d3b21552b41c8207e",
+        "android_client_info": {
+          "package_name": "com.fcmpoc.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDtMOLCtRLevaM1KmKDcswHAPYApYjp21c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
