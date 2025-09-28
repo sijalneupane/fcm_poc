@@ -2,6 +2,7 @@ import 'package:fcm_poc/core/api_response.dart';
 import 'package:fcm_poc/features/auth/model/logindata.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import '../service/login_service.dart';
 
 class LoginProvider extends ChangeNotifier {
@@ -29,8 +30,10 @@ class LoginProvider extends ChangeNotifier {
   }
 
   Future<void> loadFcmToken() async {
+    String? token = await FirebaseMessaging.instance.getToken();
+    _fcmToken = token ?? '';
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    _fcmToken = prefs.getString('fcm_token') ?? '';
+    await prefs.setString('fcm_token', _fcmToken);
     notifyListeners();
   }
 

@@ -2,8 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../provider/login_provider.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  bool _passwordVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -24,13 +31,23 @@ class LoginPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   TextField(
-                    decoration: const InputDecoration(labelText: 'Password'),
-                    obscureText: true,
+                    decoration: InputDecoration(
+                      labelText: 'Password',
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _passwordVisible ? Icons.visibility : Icons.visibility_off,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _passwordVisible = !_passwordVisible;
+                          });
+                        },
+                      ),
+                    ),
+                    obscureText: !_passwordVisible,
                     onChanged: provider.setPassword,
                   ),
                   const SizedBox(height: 16),
-                  // if (provider.fcmToken.isNotEmpty)
-                  //   Text('FCM Token: ${provider.fcmToken}', style: const TextStyle(fontSize: 12)),
                   if (provider.error != null)
                     Text(
                       provider.error!,

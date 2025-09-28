@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:fcm_poc/core/go_router_config.dart';
 import 'package:fcm_poc/firebase_options.dart';
 import 'package:fcm_poc/notifications_page.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:go_router/go_router.dart';
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // If you're going to use other Firebase services in the background, such as Firestore,
   // make sure you call `initializeApp` before using other Firebase services.
@@ -89,7 +91,7 @@ class _MyAppState extends State<MyApp> {
       initializationSettings,
       onDidReceiveNotificationResponse: (details) {
         // ✅ handles local notification tap
-        firebaseNavigatorKey.currentState?.pushNamed('/notification');
+        AppRouter.goRouter.go('/notification');
       },
     );
   }
@@ -166,7 +168,8 @@ class _MyAppState extends State<MyApp> {
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print('A notification was opened from the background state!');
       // ✅ Navigate to notification screen when notification is tapped from background
-      firebaseNavigatorKey.currentState?.pushNamed('/notification');
+      // firebaseNavigatorKey.currentState?.pushNamed('/notification');
+      AppRouter.goRouter.go('/notification');
     });
   }
 
@@ -174,6 +177,7 @@ class _MyAppState extends State<MyApp> {
     try {
       // Get FCM token
     String? token = await messaging.getToken();
+    
     print("FCM TOKEN: $token");
 
     // Subscribe to topics if needed
@@ -189,7 +193,8 @@ class _MyAppState extends State<MyApp> {
 
     if (initialMessage != null) {
       print('App was launched by clicking on a notification!');
-      firebaseNavigatorKey.currentState?.pushNamed('/notification');
+      // firebaseNavigatorKey.currentState?.pushNamed('/notification');
+    AppRouter.goRouter.go('/notification'); 
     }
   }
 
@@ -197,19 +202,13 @@ class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-       scaffoldMessengerKey: MyApp.scaffoldMessengerKey,
-       navigatorKey: firebaseNavigatorKey,
-      initialRoute: '/',
-      routes: {
-        '/':(context)=>MyHomePage(title: "Flutter Demo Home page"),
-        '/notification': (context) => NotificationsPage(),
-      },
+    return MaterialApp.router(
+      routerConfig: AppRouter.goRouter,
       title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      // home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
@@ -227,50 +226,19 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _incrementCounter() {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
       _counter++;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+       title: Text(widget.title),
       ),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
+       child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text('You have pushed the button this many times:'),
@@ -285,7 +253,7 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ), 
     );
   }
 }

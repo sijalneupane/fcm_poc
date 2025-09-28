@@ -9,7 +9,15 @@ class LoginService implements ILoginService {
   @override
   Future<ApiResponse> login(LoginData loginData) async {
     Dio dio=Dio();
-    Response res=await dio.post(ApiConst.loginUrl);
+    final data=loginData.toJson();
+    try {
+      Response res=await dio.post(ApiConst.loginUrl,data: data);
+    ApiResponse apiRes=  ApiResponse(data: res.data,errorMessaage: res.data["message"],statusCode: res.statusCode);
+    return apiRes;
+    } catch (e) {
+      print(e.toString());
+      return ApiResponse(errorMessaage: e.toString(),statusCode:500);
+    }
     throw UnimplementedError();
     // return email.isNotEmpty && password.isNotEmpty && fcmToken.isNotEmpty;
   }
